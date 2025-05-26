@@ -15,9 +15,9 @@ $browser.get('https://www.kimpel.com/about').then(function(){
   });
 }).then(function(){
   // Check that the external link matches "https://www.iana.org/domains/example"
-  return $browser.findElement($driver.By.css('div > p > a')).then(function(element){
+  return $browser.findElement($driver.By.xpath('/html/body/header/div/nav/div/a')).then(function(element){
     return element.getAttribute('href').then(function(link){
-      //assert.equal('https://www.iana.org/domains/example', link, 'More information link did not match');
+      assert.equal('https://www.kimpel.com/', link, 'home page link did not work');
     });
   });
 });
