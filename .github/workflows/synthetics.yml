@@ -38,10 +38,10 @@ jobs:
       - name: Sync Changes to Synthetics
         if: steps.changed-files.outputs.any_changed == 'true'
         uses: newrelic-experimental/synthetics-sync@v1.2
-        with: # OPTIONAL defaults for creation of new scripts committed
-          accountId: ""
-          runtime: ""
+        with: # all optional defaults for creation of new scripts committed
+          accountId: 6776469
+          runtime: "new"
           privateLocations: ""
-          publicLocations: ""
-          interval: ""
-          status: ""
+          publicLocations: "['AWS_US_EAST_1']"
+          interval: EVERY_15_MINUTES
+          status: ENABLED
