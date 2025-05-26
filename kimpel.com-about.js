@@ -5,7 +5,7 @@
  */
 
 var assert = require('assert');
-monitorType: SCRIPT_BROWSER
+//monitorType: SCRIPT_BROWSER
 $browser.get('https://www.kimpel.com/about').then(function(){
   // Check the H1 title matches "Example Domain"
   return $browser.findElement($driver.By.css('h1')).then(function(element){
