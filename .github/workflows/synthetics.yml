@@ -45,4 +45,3 @@ jobs:
           publicLocations: "['AWS_US_EAST_1']"
           interval: EVERY_15_MINUTES
           status: ENABLED
-          monitorType: SCRIPT_BROWSER
