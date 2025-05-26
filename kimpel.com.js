@@ -6,7 +6,7 @@
 
 var assert = require('assert');
 
-$browser.get('https://www.kimpel.com').then(function(){
+$browser.get('https://www.kimpel.com/about').then(function(){
   // Check the H1 title matches "Example Domain"
   return $browser.findElement($driver.By.css('h1')).then(function(element){
     return element.getText().then(function(text){
