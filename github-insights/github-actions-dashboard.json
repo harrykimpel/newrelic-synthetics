@@ -9,343 +9,143 @@
       "widgets": [
         {
           "title": "Total Workflow Runs",
-          "layout": {
-            "column": 1,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) AS 'Workflow Runs' FROM GitHubActionsWorkflowRun SINCE 7 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) AS 'Workflow Runs' FROM GitHubActionsWorkflowRun SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Total Job Runs",
-          "layout": {
-            "column": 3,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) AS 'Job Runs' FROM GitHubActionsJob SINCE 7 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) AS 'Job Runs' FROM GitHubActionsJob SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
-          "title": "Total Minutes Used",
-          "layout": {
-            "column": 5,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "title": "Raw Minutes Used",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT sum(durationMs) / 60000 AS 'Total Minutes' FROM GitHubActionsJob SINCE 7 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(durationMs) / 60000 AS 'Raw Minutes' FROM GitHubActionsJob SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "GitHub Billing Minutes",
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(billingMinutes) AS 'Billing Minutes' FROM GitHubActionsJob SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Success Rate",
-          "layout": {
-            "column": 7,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT percentage(count(*), WHERE conclusion = 'success') AS 'Success Rate %' FROM GitHubActionsWorkflowRun SINCE 7 days ago"
-              }
-            ],
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT percentage(count(*), WHERE conclusion = 'success') AS 'Success Rate %' FROM GitHubActionsWorkflowRun SINCE 7 days ago" }],
             "thresholds": [
-              {
-                "alertSeverity": "CRITICAL",
-                "value": 80
-              },
-              {
-                "alertSeverity": "WARNING",
-                "value": 90
-              }
+              { "alertSeverity": "CRITICAL", "value": 80 },
+              { "alertSeverity": "WARNING", "value": 90 }
             ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Avg Job Duration",
-          "layout": {
-            "column": 9,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 5, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob SINCE 7 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Failed Runs",
-          "layout": {
-            "column": 11,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) AS 'Failed Runs' FROM GitHubActionsWorkflowRun WHERE conclusion = 'failure' SINCE 7 days ago"
-              }
-            ],
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) AS 'Failed Runs' FROM GitHubActionsWorkflowRun WHERE conclusion = 'failure' SINCE 7 days ago" }],
             "thresholds": [
-              {
-                "alertSeverity": "WARNING",
-                "value": 1
-              },
-              {
-                "alertSeverity": "CRITICAL",
-                "value": 5
-              }
+              { "alertSeverity": "WARNING", "value": 1 },
+              { "alertSeverity": "CRITICAL", "value": 5 }
             ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Workflow Runs Over Time",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 8,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 7, "width": 8, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
+          "visualization": { "id": "viz.area" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET conclusion TIMESERIES AUTO SINCE 7 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET conclusion TIMESERIES AUTO SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Runs by Conclusion",
-          "layout": {
-            "column": 9,
-            "row": 4,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 7, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.pie"
-          },
+          "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET conclusion SINCE 7 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": true
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET conclusion SINCE 7 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": true },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Top Workflows by Run Count",
-          "layout": {
-            "column": 1,
-            "row": 7,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 10, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName SINCE 7 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName SINCE 7 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Jobs by Status",
-          "layout": {
-            "column": 7,
-            "row": 7,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 7, "row": 10, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsJob FACET conclusion SINCE 7 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsJob FACET conclusion SINCE 7 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Minutes Used per Day",
-          "layout": {
-            "column": 1,
-            "row": 10,
-            "width": 12,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 13, "width": 12, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT sum(durationMs) / 60000 AS 'Minutes' FROM GitHubActionsJob TIMESERIES SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(durationMs) / 60000 AS 'Minutes' FROM GitHubActionsJob TIMESERIES SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Recent Failed Runs",
-          "layout": {
-            "column": 1,
-            "row": 13,
-            "width": 12,
-            "height": 4
-          },
+          "layout": { "column": 1, "row": 16, "width": 12, "height": 4 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.table"
-          },
+          "visualization": { "id": "viz.table" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT workflowName, branch, actor, conclusion, durationMs / 60000 AS 'Duration (min)', createdAt FROM GitHubActionsWorkflowRun WHERE conclusion = 'failure' OR conclusion = 'cancelled' OR conclusion = 'timed_out' SINCE 7 days ago LIMIT 50"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT workflowName, branch, actor, conclusion, durationMs / 60000 AS 'Duration (min)', createdAt FROM GitHubActionsWorkflowRun WHERE conclusion = 'failure' OR conclusion = 'cancelled' OR conclusion = 'timed_out' SINCE 7 days ago LIMIT 50" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         }
       ]
@@ -356,231 +156,89 @@
       "widgets": [
         {
           "title": "Runs by Workflow",
-          "layout": {
-            "column": 1,
-            "row": 1,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 1, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Avg Duration by Workflow",
-          "layout": {
-            "column": 7,
-            "row": 1,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Workflow Run Success vs Failure Over Time",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 8,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 4, "width": 8, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.line"
-          },
+          "visualization": { "id": "viz.line" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName TIMESERIES 1 day SINCE 30 days ago LIMIT 10"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            },
-            "yAxisLeft": {
-              "zero": true
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET workflowName TIMESERIES 1 day SINCE 30 days ago LIMIT 10" }],
+            "platformOptions": { "ignoreTimeWindow": false },
+            "yAxisLeft": { "zero": true }
           }
         },
         {
           "title": "Failure Rate by Workflow",
-          "layout": {
-            "column": 9,
-            "row": 4,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT percentage(count(*), WHERE conclusion = 'failure') AS 'Failure Rate %' FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT percentage(count(*), WHERE conclusion = 'failure') AS 'Failure Rate %' FROM GitHubActionsWorkflowRun FACET workflowName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Runs by Trigger Event",
-          "layout": {
-            "column": 1,
-            "row": 7,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 7, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.pie"
-          },
+          "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET triggerEvent SINCE 30 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": true
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET triggerEvent SINCE 30 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": true },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Runs by Actor (Top 10)",
-          "layout": {
-            "column": 5,
-            "row": 7,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 5, "row": 7, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET actor SINCE 30 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET actor SINCE 30 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Runs by Branch",
-          "layout": {
-            "column": 9,
-            "row": 7,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 7, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET branch SINCE 30 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsWorkflowRun FACET branch SINCE 30 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "All Workflow Runs",
-          "layout": {
-            "column": 1,
-            "row": 10,
-            "width": 12,
-            "height": 5
-          },
+          "layout": { "column": 1, "row": 10, "width": 12, "height": 5 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.table"
-          },
+          "visualization": { "id": "viz.table" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT runId, workflowName, branch, actor, triggerEvent, status, conclusion, durationMs / 60000 AS 'Duration (min)', createdAt FROM GitHubActionsWorkflowRun SINCE 30 days ago LIMIT 200"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT runId, workflowName, branch, actor, triggerEvent, status, conclusion, durationMs / 60000 AS 'Duration (min)', createdAt FROM GitHubActionsWorkflowRun SINCE 30 days ago LIMIT 200" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         }
       ]
@@ -591,365 +249,162 @@
       "widgets": [
         {
           "title": "Total Jobs",
-          "layout": {
-            "column": 1,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) AS 'Total Jobs' FROM GitHubActionsJob SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) AS 'Total Jobs' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
-          "title": "Total Minutes (Jobs)",
-          "layout": {
-            "column": 3,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "title": "Raw Minutes (Jobs)",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT sum(durationMs) / 60000 AS 'Total Minutes' FROM GitHubActionsJob SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(durationMs) / 60000 AS 'Raw Minutes' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
-          "title": "Avg Job Duration (min)",
-          "layout": {
-            "column": 5,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "title": "GitHub Billing Minutes",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(billingMinutes) AS 'Billing Minutes' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Failed Jobs",
-          "layout": {
-            "column": 7,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) AS 'Failed Jobs' FROM GitHubActionsJob WHERE conclusion = 'failure' SINCE 30 days ago"
-              }
-            ],
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) AS 'Failed Jobs' FROM GitHubActionsJob WHERE conclusion = 'failure' SINCE 30 days ago" }],
             "thresholds": [
-              {
-                "alertSeverity": "WARNING",
-                "value": 1
-              },
-              {
-                "alertSeverity": "CRITICAL",
-                "value": 10
-              }
+              { "alertSeverity": "WARNING", "value": 1 },
+              { "alertSeverity": "CRITICAL", "value": 10 }
             ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Job Duration (min)",
+          "layout": { "column": 1, "row": 4, "width": 4, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Unique Job Types",
-          "layout": {
-            "column": 9,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 5, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT uniqueCount(jobName) AS 'Unique Jobs' FROM GitHubActionsJob SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(jobName) AS 'Unique Jobs' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "P95 Job Duration (min)",
-          "layout": {
-            "column": 11,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
+          "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT percentile(durationMs, 95) / 60000 AS 'P95 Duration (min)' FROM GitHubActionsJob SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT percentile(durationMs, 95) / 60000 AS 'P95 Duration (min)' FROM GitHubActionsJob SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Top Jobs by Run Count",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 7, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsJob FACET jobName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsJob FACET jobName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Avg Duration by Job Name",
-          "layout": {
-            "column": 7,
-            "row": 4,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 7, "row": 7, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob FACET jobName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(durationMs) / 60000 AS 'Avg Duration (min)' FROM GitHubActionsJob FACET jobName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Jobs Over Time",
-          "layout": {
-            "column": 1,
-            "row": 7,
-            "width": 8,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 10, "width": 8, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
+          "visualization": { "id": "viz.area" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsJob FACET conclusion TIMESERIES 1 day SINCE 30 days ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsJob FACET conclusion TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Jobs by Runner Group",
-          "layout": {
-            "column": 9,
-            "row": 7,
-            "width": 4,
-            "height": 3
-          },
+          "layout": { "column": 9, "row": 10, "width": 4, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.pie"
-          },
+          "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsJob FACET runnerGroupName SINCE 30 days ago LIMIT 10"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": true
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsJob FACET runnerGroupName SINCE 30 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": true },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Billing Minutes by Runner OS",
+          "layout": { "column": 1, "row": 13, "width": 6, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(billingMinutes) AS 'Billing Minutes' FROM GitHubActionsJob FACET runnerOs SINCE 30 days ago" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Job Failure Rate by Workflow",
-          "layout": {
-            "column": 1,
-            "row": 10,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 7, "row": 13, "width": 6, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT percentage(count(*), WHERE conclusion = 'failure') AS 'Failure Rate %' FROM GitHubActionsJob FACET workflowName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT percentage(count(*), WHERE conclusion = 'failure') AS 'Failure Rate %' FROM GitHubActionsJob FACET workflowName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "Jobs by Runner Name",
-          "layout": {
-            "column": 7,
-            "row": 10,
-            "width": 6,
-            "height": 3
-          },
+          "layout": { "column": 1, "row": 16, "width": 12, "height": 3 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.bar"
-          },
+          "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT count(*) FROM GitHubActionsJob FACET runnerName SINCE 30 days ago LIMIT 20"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubActionsJob FACET runnerName SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         },
         {
           "title": "All Jobs",
-          "layout": {
-            "column": 1,
-            "row": 13,
-            "width": 12,
-            "height": 5
-          },
+          "layout": { "column": 1, "row": 19, "width": 12, "height": 5 },
           "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.table"
-          },
+          "visualization": { "id": "viz.table" },
           "rawConfiguration": {
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  NR_ACCOUNT_ID
-                ],
-                "query": "SELECT jobId, workflowName, jobName, runnerName, runnerGroupName, status, conclusion, durationMs / 60000 AS 'Duration (min)', startedAt, completedAt FROM GitHubActionsJob SINCE 30 days ago LIMIT 500"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeWindow": false
-            }
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT jobId, workflowName, jobName, runnerName, runnerOs, billingMultiplier, billingMinutes, conclusion, durationMs / 60000 AS 'Raw Duration (min)', startedAt, completedAt FROM GitHubActionsJob SINCE 30 days ago LIMIT 500" }],
+            "platformOptions": { "ignoreTimeWindow": false }
           }
         }
       ]

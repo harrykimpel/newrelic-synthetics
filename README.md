@@ -116,7 +116,10 @@ Calls the GitHub REST API to collect the previous 25 hours of Actions data (work
 | `workflowName` / `jobName` | Display names |
 | `status` / `conclusion` | Same values as workflow run |
 | `runnerName` / `runnerGroupName` | Runner details |
-| `durationMs` | Job duration in milliseconds |
+| `runnerOs` | Detected OS: `Linux`, `Windows`, or `macOS` (derived from job labels) |
+| `billingMultiplier` | GitHub rate: Linux=1, Windows=2, macOS=10 |
+| `durationMs` | Raw job duration in milliseconds |
+| `billingMinutes` | `ceil(durationMs / 60000) × billingMultiplier` — matches GitHub's billed minutes |
 | `startedAt` / `completedAt` | ISO timestamps |
 
 #### Setup
@@ -150,7 +153,8 @@ A ready-to-import New Relic dashboard with three pages/tabs.
 
 **Page 1 — Overview** (7-day default window)
 
-- Billboards: Total Workflow Runs, Total Job Runs, Total Minutes Used, Success Rate %, Avg Job Duration, Failed Runs
+- Billboards row 1: Total Workflow Runs, Total Job Runs, Raw Minutes Used, GitHub Billing Minutes
+- Billboards row 2: Success Rate %, Avg Job Duration, Failed Runs
 - Area chart: runs over time by conclusion
 - Pie: runs by conclusion
 - Bar charts: top workflows by run count, jobs by status
@@ -167,12 +171,14 @@ A ready-to-import New Relic dashboard with three pages/tabs.
 
 **Page 3 — Job Details** (30-day window)
 
-- Billboards: Total Jobs, Total Minutes, Avg Duration, Failed Jobs, Unique Job Types, P95 Duration
+- Billboards row 1: Total Jobs, Raw Minutes, GitHub Billing Minutes, Failed Jobs
+- Billboards row 2: Avg Job Duration, Unique Job Types, P95 Duration
 - Bars: top jobs by count, avg duration by job name
 - Area: jobs over time by conclusion
 - Pie: jobs by runner group
+- Bar: billing minutes by runner OS
 - Bars: failure rate by workflow, jobs by runner name
-- Full jobs table
+- Full jobs table (includes `runnerOs`, `billingMultiplier`, `billingMinutes`)
 
 #### Importing the dashboard
 

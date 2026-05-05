@@ -50,7 +50,7 @@ function githubGet(path, callback) {
     function (err, response, body) {
       if (err) return callback(err);
       assert.equal(response.statusCode, 200, 'GitHub API error ' + response.statusCode + ' for ' + path);
-      callback(null, JSON.parse(body));
+      callback(null, JSON.parse(JSON.stringify(body)));
     }
   );
 }
@@ -93,6 +93,21 @@ function durationMs(start, end) {
 
 function epochSec(isoString) {
   return Math.floor(new Date(isoString).getTime() / 1000);
+}
+
+// GitHub billing multipliers: macOS=10x, Windows=2x, Linux=1x
+function runnerOsFromLabels(labels) {
+  if (!labels || labels.length === 0) return 'Linux';
+  var joined = labels.join(' ').toLowerCase();
+  if (joined.indexOf('macos') !== -1 || joined.indexOf('mac-') !== -1) return 'macOS';
+  if (joined.indexOf('windows') !== -1) return 'Windows';
+  return 'Linux';
+}
+
+function billingMultiplierForOs(os) {
+  if (os === 'macOS') return 10;
+  if (os === 'Windows') return 2;
+  return 1;
 }
 
 // ── Step 1: fetch workflow definitions ───────────────────────────────────────
@@ -180,6 +195,13 @@ githubGet(REPO_PATH + '/actions/workflows?per_page=100', function (err, data) {
           function (err, data) {
             if (!err && data && data.jobs) {
               data.jobs.forEach(function (job) {
+                var jobDurationMs = durationMs(job.started_at, job.completed_at);
+                var jobRunnerOs = runnerOsFromLabels(job.labels);
+                var jobMultiplier = billingMultiplierForOs(jobRunnerOs);
+                var jobBillingMinutes = jobDurationMs !== null
+                  ? Math.ceil(jobDurationMs / 60000) * jobMultiplier
+                  : null;
+
                 jobEvents.push({
                   eventType: 'GitHubActionsJob',
                   repo: GITHUB_OWNER + '/' + GITHUB_REPO,
@@ -191,7 +213,10 @@ githubGet(REPO_PATH + '/actions/workflows?per_page=100', function (err, data) {
                   conclusion: job.conclusion || 'in_progress',
                   runnerName: job.runner_name || '',
                   runnerGroupName: job.runner_group_name || '',
-                  durationMs: durationMs(job.started_at, job.completed_at),
+                  runnerOs: jobRunnerOs,
+                  billingMultiplier: jobMultiplier,
+                  durationMs: jobDurationMs,
+                  billingMinutes: jobBillingMinutes,
                   startedAt: job.started_at || '',
                   completedAt: job.completed_at || '',
                   timestamp: job.started_at ? epochSec(job.started_at) : Math.floor(Date.now() / 1000)
