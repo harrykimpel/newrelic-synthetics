@@ -1,0 +1,307 @@
+{
+  "name": "GitHub Copilot Agent",
+  "description": "Tracks the GitHub Copilot coding agent (copilot-swe-agent) — PRs it authored, issues assigned to it, code churn, and time-to-merge. Powered by GitHubCopilotAgentPR and GitHubCopilotAgentIssue custom events.",
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Overview",
+      "description": "High-level Copilot coding agent activity",
+      "widgets": [
+        {
+          "title": "PRs Created",
+          "layout": { "column": 1, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(prNumber) AS 'PRs Created' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Merged PRs",
+          "layout": { "column": 3, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(prNumber) AS 'Merged PRs' FROM GitHubCopilotAgentPR WHERE merged = true SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Merge Rate",
+          "layout": { "column": 5, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT percentage(count(*), WHERE merged = true) AS 'Merge Rate %' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "thresholds": [
+              { "alertSeverity": "WARNING", "value": 50 },
+              { "alertSeverity": "CRITICAL", "value": 30 }
+            ],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Time to Merge",
+          "layout": { "column": 7, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(timeToMergeMs) / 3600000 AS 'Avg Time to Merge (hrs)' FROM GitHubCopilotAgentPR WHERE merged = true SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Open Issues",
+          "layout": { "column": 9, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(issueNumber) AS 'Open Issues' FROM GitHubCopilotAgentIssue WHERE state = 'open' SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Time to Close Issue",
+          "layout": { "column": 11, "row": 1, "width": 2, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(timeToCloseMs) / 3600000 AS 'Avg Close Time (hrs)' FROM GitHubCopilotAgentIssue WHERE state = 'closed' SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "PR Activity Over Time",
+          "layout": { "column": 1, "row": 4, "width": 8, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.area" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubCopilotAgentPR FACET state TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "PR State Breakdown",
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.pie" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(prNumber) FROM GitHubCopilotAgentPR FACET cases(WHERE merged = true AS 'Merged', WHERE state = 'open' AS 'Open', WHERE state = 'closed' AND merged = false AS 'Closed without merge') SINCE 30 days ago" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Issue Activity Over Time",
+          "layout": { "column": 1, "row": 7, "width": 8, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.area" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubCopilotAgentIssue FACET state TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Issues by Label",
+          "layout": { "column": 9, "row": 7, "width": 4, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubCopilotAgentIssue FACET labels SINCE 30 days ago LIMIT 10" }],
+            "facet": { "showOtherSeries": true },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Recent Agent PRs",
+          "layout": { "column": 1, "row": 10, "width": 12, "height": 4 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT prNumber, title, state, merged, branch, timeToMergeMs / 3600000 AS 'Time to Merge (hrs)', additions, deletions, changedFiles, createdAt FROM GitHubCopilotAgentPR SINCE 30 days ago LIMIT 100" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PR Details",
+      "description": "Code churn, review activity, and merge time trends per agent PR",
+      "widgets": [
+        {
+          "title": "Avg Additions per PR",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(additions) AS 'Avg Additions' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Deletions per PR",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(deletions) AS 'Avg Deletions' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Changed Files per PR",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(changedFiles) AS 'Avg Changed Files' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Review Comments per PR",
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(reviewComments) AS 'Avg Review Comments' FROM GitHubCopilotAgentPR SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Code Churn per PR (additions + deletions)",
+          "layout": { "column": 1, "row": 4, "width": 6, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(additions + deletions) AS 'Churn' FROM GitHubCopilotAgentPR FACET prNumber, title SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Changed Files per PR",
+          "layout": { "column": 7, "row": 4, "width": 6, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(changedFiles) AS 'Changed Files' FROM GitHubCopilotAgentPR FACET prNumber, title SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Time to Merge Trend (hrs)",
+          "layout": { "column": 1, "row": 7, "width": 8, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(timeToMergeMs) / 3600000 AS 'Avg Time to Merge (hrs)' FROM GitHubCopilotAgentPR WHERE merged = true TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false },
+            "yAxisLeft": { "zero": true }
+          }
+        },
+        {
+          "title": "Review Comments per PR",
+          "layout": { "column": 9, "row": 7, "width": 4, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(reviewComments) AS 'Review Comments' FROM GitHubCopilotAgentPR FACET prNumber, title SINCE 30 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "All Agent PRs",
+          "layout": { "column": 1, "row": 10, "width": 12, "height": 5 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT prNumber, title, state, merged, draft, branch, baseBranch, commits, additions, deletions, changedFiles, reviewComments, comments, timeToMergeMs / 3600000 AS 'Time to Merge (hrs)', createdAt, mergedAt FROM GitHubCopilotAgentPR SINCE 90 days ago LIMIT 200" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "description": "Issues assigned to the Copilot coding agent",
+      "widgets": [
+        {
+          "title": "Open Issues",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(issueNumber) AS 'Open Issues' FROM GitHubCopilotAgentIssue WHERE state = 'open' SINCE 7 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Closed Issues",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(issueNumber) AS 'Closed Issues' FROM GitHubCopilotAgentIssue WHERE state = 'closed' SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Avg Time to Close (hrs)",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(timeToCloseMs) / 3600000 AS 'Avg Close Time (hrs)' FROM GitHubCopilotAgentIssue WHERE state = 'closed' SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Total Comments (avg per issue)",
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT average(comments) AS 'Avg Comments' FROM GitHubCopilotAgentIssue SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Issue Resolution Over Time",
+          "layout": { "column": 1, "row": 4, "width": 8, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubCopilotAgentIssue FACET state TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false },
+            "yAxisLeft": { "zero": true }
+          }
+        },
+        {
+          "title": "Issues by Label",
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT count(*) FROM GitHubCopilotAgentIssue FACET labels SINCE 30 days ago LIMIT 15" }],
+            "facet": { "showOtherSeries": true },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "All Issues",
+          "layout": { "column": 1, "row": 7, "width": 12, "height": 5 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT issueNumber, title, state, labels, assignees, comments, timeToCloseMs / 3600000 AS 'Time to Close (hrs)', createdAt, closedAt FROM GitHubCopilotAgentIssue SINCE 90 days ago LIMIT 200" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        }
+      ]
+    }
+  ]
+}

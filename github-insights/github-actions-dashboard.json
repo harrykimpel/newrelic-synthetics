@@ -408,6 +408,95 @@
           }
         }
       ]
+    },
+    {
+      "name": "Storage & Artifacts",
+      "description": "Actions cache usage and artifact storage trends",
+      "widgets": [
+        {
+          "title": "Cache Entries (current)",
+          "layout": { "column": 1, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(activeCachesCount) AS 'Cache Entries' FROM GitHubActionsCache SINCE 2 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Cache Size (current)",
+          "layout": { "column": 4, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(activeCachesSizeMb) AS 'Cache Size (MB)' FROM GitHubActionsCache SINCE 2 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Active Artifacts",
+          "layout": { "column": 7, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT uniqueCount(artifactId) AS 'Active Artifacts' FROM GitHubActionsArtifact WHERE expired = false SINCE 2 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Artifact Storage (current)",
+          "layout": { "column": 10, "row": 1, "width": 3, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT sum(sizeMb) AS 'Artifact Storage (MB)' FROM GitHubActionsArtifact WHERE expired = false SINCE 2 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "Cache Size Trend (MB)",
+          "layout": { "column": 1, "row": 4, "width": 6, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(activeCachesSizeMb) AS 'Cache Size (MB)' FROM GitHubActionsCache TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false },
+            "yAxisLeft": { "zero": true }
+          }
+        },
+        {
+          "title": "Cache Entry Count Trend",
+          "layout": { "column": 7, "row": 4, "width": 6, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(activeCachesCount) AS 'Cache Entries' FROM GitHubActionsCache TIMESERIES 1 day SINCE 30 days ago" }],
+            "platformOptions": { "ignoreTimeWindow": false },
+            "yAxisLeft": { "zero": true }
+          }
+        },
+        {
+          "title": "Artifact Storage by Name (MB)",
+          "layout": { "column": 1, "row": 7, "width": 12, "height": 3 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT latest(sizeMb) AS 'Size (MB)' FROM GitHubActionsArtifact WHERE expired = false FACET artifactName SINCE 2 days ago LIMIT 20" }],
+            "facet": { "showOtherSeries": false },
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        },
+        {
+          "title": "All Artifacts",
+          "layout": { "column": 1, "row": 10, "width": 12, "height": 5 },
+          "linkedEntityGuids": null,
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountIds": [NR_ACCOUNT_ID], "query": "SELECT artifactName, sizeMb AS 'Size (MB)', expired, createdAt, expiresAt, workflowRunId FROM GitHubActionsArtifact SINCE 2 days ago LIMIT 200" }],
+            "platformOptions": { "ignoreTimeWindow": false }
+          }
+        }
+      ]
     }
   ]
 }

@@ -175,12 +175,60 @@ githubGet(REPO_PATH + '/actions/workflows?per_page=100', function (err, data) {
       function onAllJobsFetched() {
         console.log('Jobs found:', jobEvents.length);
 
-        var allEvents = workflowEvents.concat(runEvents).concat(jobEvents);
-        console.log('Total events to post:', allEvents.length);
+        // Fetch cache usage and artifacts in parallel, then post everything together
+        var extraEvents = [];
+        var pending = 2;
 
-        postEvents(allEvents, function (err) {
-          assert.ifError(err);
-          console.log('Successfully posted', allEvents.length, 'events to New Relic.');
+        function onExtraFetched() {
+          if (--pending !== 0) return;
+          var allEvents = workflowEvents.concat(runEvents).concat(jobEvents).concat(extraEvents);
+          console.log('Total events to post:', allEvents.length);
+          postEvents(allEvents, function (err) {
+            assert.ifError(err);
+            console.log('Successfully posted', allEvents.length, 'events to New Relic.');
+          });
+        }
+
+        // Cache usage — one summary event per run
+        githubGet(REPO_PATH + '/actions/cache/usage', function (err, data) {
+          if (!err && data) {
+            extraEvents.push({
+              eventType: 'GitHubActionsCache',
+              repo: GITHUB_OWNER + '/' + GITHUB_REPO,
+              activeCachesCount: data.active_caches_count,
+              activeCachesSizeBytes: data.active_caches_size_in_bytes,
+              activeCachesSizeMb: Math.round(data.active_caches_size_in_bytes / (1024 * 1024) * 100) / 100,
+              timestamp: Math.floor(Date.now() / 1000)
+            });
+          } else if (err) {
+            console.warn('Could not fetch cache usage:', err.message);
+          }
+          onExtraFetched();
+        });
+
+        // Artifacts — one event per artifact
+        githubGet(REPO_PATH + '/actions/artifacts?per_page=100', function (err, data) {
+          if (!err && data && data.artifacts) {
+            data.artifacts.forEach(function (artifact) {
+              extraEvents.push({
+                eventType: 'GitHubActionsArtifact',
+                repo: GITHUB_OWNER + '/' + GITHUB_REPO,
+                artifactId: artifact.id,
+                artifactName: artifact.name,
+                sizeBytes: artifact.size_in_bytes,
+                sizeMb: Math.round(artifact.size_in_bytes / (1024 * 1024) * 100) / 100,
+                expired: artifact.expired,
+                createdAt: artifact.created_at,
+                expiresAt: artifact.expires_at || '',
+                workflowRunId: artifact.workflow_run ? artifact.workflow_run.id : null,
+                timestamp: epochSec(artifact.created_at)
+              });
+            });
+            console.log('Artifacts found:', data.artifacts.length);
+          } else if (err) {
+            console.warn('Could not fetch artifacts:', err.message);
+          }
+          onExtraFetched();
         });
       }
 
